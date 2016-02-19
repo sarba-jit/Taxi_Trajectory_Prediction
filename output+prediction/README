@@ -12,4 +12,4 @@ In addition, the trips available for matching is limited by the type of trip.  F
 * Angle between the last bearing
 
 ## Run
-Requires unzipped train.csv and test.csv.  Run util.R -> read_data.R -> lookup.R
+Requires unzipped train.csv and test.csv.  Run haversine.R -> read_data.R -> final_output_prediction.R
