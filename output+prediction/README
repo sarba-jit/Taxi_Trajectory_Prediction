@@ -1,0 +1,15 @@
+# Kaggle EMCL/PKDD 15: Taxi Trajectory and Trip Time
+
+## Algorithm
+The idea is to look up similar trajectories based on 2 points.  One point is the starting location.  The other is the GPS location closest to where the test trajectory was cut.  Instead of looking at the whole polyline, we limit ourselves to the positions after the trip duration time has elapsed.
+
+In addition, the trips available for matching is limited by the type of trip.  For example, one of the cutoff times in the test set is for morning commutes.  Another cutoff time is the Sunday afternoon before a public holiday.
+
+## Similarity Features
+* Haversine distance between the train and trip trajectories at the starting location
+* Haversine distance between the train and trip trajectories at the cutoff location
+* Angle between the overall bearing
+* Angle between the last bearing
+
+## Run
+Requires unzipped train.csv and test.csv.  Run util.R -> read_data.R -> lookup.R

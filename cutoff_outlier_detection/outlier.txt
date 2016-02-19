@@ -1,0 +1,26 @@
+### Test set is a combination of 5 different days
+### With trips around that day's cutoff time selected.
+### We can see this by comparing the duration from the number of snapshots
+### and the duration difference between the timestamp and the max timestamp of each day.
+
+
+### Read
+test <- read.csv("test.csv")
+test <- data.table(test)
+test <- test[POLYLINE!='[]']
+setkey(test, TRIP_ID)
+
+### Get snapshots from POLYLINE and hour from TIMESTAMP
+	
+test[, SNAPSHOTS:=length(fromJSON(as.character(POLYLINE))), by=TRIP_ID]
+test[, POLYLINE:=NULL]
+test[, TIMESTAMP:=(as.POSIXct(as.integer(TIMESTAMP), origin="1970-01-01", tz='GMT'))]
+test[, sample_date:=as.factor(format(TIMESTAMP, '%Y-%m-%d'))]
+test[, CUTOFF:=max(TIMESTAMP), by=sample_date]
+test[, duration_snapshots:=SNAPSHOTS*15/60]
+test[, duration_timestamp:=as.numeric(CUTOFF-TIMESTAMP)/60]
+g <- ggplot(test) + geom_point(aes(x=duration_snapshots, y=duration_timestamp, color=sample_date))
+g <- g + facet_wrap(~sample_date) + geom_abline(intercept=0,slope=1)
+g <- g + ggtitle('Test set cutoff point and outlier identification')
+ggsave('Test set cutoff point and outlier identification.png', width=9, height=6)
+                
